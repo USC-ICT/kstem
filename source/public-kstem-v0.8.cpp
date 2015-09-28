@@ -46,17 +46,29 @@
 
 */
 
+// leuski::
+// making kstem thread safe and moving the data from external files into
+// the compiled code.
+// basically I wrap kstem code into a class, most of the static variables
+// become class memeber variables.
+// I moved variables that can be made local into the function code.
+
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+
+extern "C" {
 #include "hash.h"             /* hash tables */
+}
+
+#include "kstem_data.hpp"
 
 #define vowel(i) (!consonant(i))
 
 #define MAX_WORD_LENGTH 25
-#define MAX_FILENAME_LENGTH 125  /* including the full directory path */
+#define MAX_FILENAME_LENGTH 1024  /* including the full directory path */
 #define MAX_ROOTS 35000           /* maximum number of root forms in the lexicon */
 #define HASH_DICT_SIZE 40000
 #define TRUE 1
@@ -73,7 +85,9 @@
 #define ends_in(s) ends(s, sizeof(s)-1)      /* s must be a string constant */
 #define setsuffix(s) setsuff(s, sizeof(s)-1) /* s must be a string constant */
 
+class Kstem {
 
+static const char* kstem_EMPTY_STRING; // = "";
 
 /* -----------------------------  Declarations ------------------------------*/
 typedef int boolean;
@@ -81,7 +95,7 @@ typedef int boolean;
 typedef struct
     {
     boolean e_exception;  /* is the word an exception for words ending in "e" */
-    char *root;           /* used for direct lookup (e.g. irregular variants) */
+    const char *root;     /* used for direct lookup (e.g. irregular variants) */
    } dictentry;
 
 /* ------------------------- Function Declarations --------------------------*/
@@ -92,28 +106,32 @@ typedef struct
 
 char *word;
 
-void *lookup_value;
+// made local
+//static void *lookup_value;
 
 
 int j;    /* INDEX of final letter in stem (within word) */
 int k;    /* INDEX of final letter in word.
-	     You must add 1 to k to get the current length of word.  
-	     When you want the length of word, use the macro wordlength,
-	     which is #defined as (k+1).  Note that wordlength is only
-             used for its value (never assigned to), so this is ok. */
+//	     You must add 1 to k to get the current length of word.
+//	     When you want the length of word, use the macro wordlength,
+//	     which is #defined as (k+1).  Note that wordlength is only
+//             used for its value (never assigned to), so this is ok. */
 
 
-boolean dict_initialized_flag = FALSE;  /* ensure we load it before using it */
+static boolean dict_initialized_flag; // = FALSE;  /* ensure we load it before using it */
 
-HASH *dict_ht;                          /* the hashtable used to store the dictionary */
+static HASH *dict_ht;                          /* the hashtable used to store the dictionary */
 
-dictentry *dep;                         /* for general use with dictionary entries    */
+// made local
+//static dictentry *dep;                         /* for general use with dictionary entries    */
 
-char headword[MAX_ROOTS][MAX_WORD_LENGTH];  /* use an array (instead of char*) because 
-                                                  of the need for separate storage of the 
-                                                  root form in the hash table */
+// removed as all the word are now in the data segment
+//static char headword[MAX_ROOTS][MAX_WORD_LENGTH];  /* use an array (instead of char*) because
+//                                                  of the need for separate storage of the
+//                                                  root form in the hash table */
 
-int headword_cnt = 0;                  /* for moving through the array of headwords */
+// made local
+//static int headword_cnt = 0;                  /* for moving through the array of headwords */
 
 
 
@@ -121,6 +139,73 @@ int headword_cnt = 0;                  /* for moving through the array of headwo
 
 /* -------------------------- Function Definitions --------------------------*/
 
+static dictentry* search_hash(const char* root)
+{
+	return (dictentry*)::search_hash(dict_ht, root);
+}
+
+// returns true if the key did exist in the hash table
+static boolean search_hash_insert_if_not_found(const char* root, const char* value)
+{
+	dictentry*	dep = search_hash(root);
+	/* if the word isn't already there, insert it */
+	if (dep != NULL) return TRUE;
+	
+	dep = (dictentry *)malloc(sizeof(dictentry));
+	dep->e_exception = FALSE;
+	dep->root = value;
+	insert_hash(dict_ht, root, (void *)dep);
+	return FALSE;
+}
+
+// returns true if the key exists and the root is not empty.
+// and copies the root to buffer provided
+static boolean search_hash_return_copy(const char* root, char* value)
+{
+	dictentry*	dep = search_hash(root);
+	if (dep == NULL) return FALSE;
+	
+	if (dep->root != kstem_EMPTY_STRING) {       /* the word itself (which was simply shifted */
+		strcpy(value, dep->root);									/* to lowercase at the beginning of the  */
+		return TRUE;                                   /* routine). */
+	}
+	
+	return FALSE;
+}
+
+static void hash_single(const char* const words[], int count, const char* error)
+{
+	for(int i = 0; i < count; ++i) {
+     if (search_hash_insert_if_not_found(words[i], kstem_EMPTY_STRING)) {
+       fprintf(stderr, error, words[i]);
+       exit(0);
+     }
+	}
+}
+
+static void hash_exceptions(const char* const words[], int count, const char* error)
+{
+	for(int i = 0; i < count; ++i) {
+		dictentry*	dep = search_hash(words[i]);
+		if (dep == NULL) {
+			fprintf(stderr, error, words[i]);
+			exit(0);
+		}
+		dep->e_exception = TRUE;
+	}
+}
+
+static void hash_double(const char* const words[], int count, const char* error)
+{
+	for(int i = 0; i < count-1; i +=2) {
+		if (search_hash_insert_if_not_found(words[i], words[i+1])) {
+			fprintf(stderr, error, words[i]);
+			exit(0);
+		}
+	}
+}
+
+// void read_dict_info(void);
 
 /* read_dict_info() reads the words from the dictionary and puts them into a
                     hash table.  It also stores the other lexicon information
@@ -128,25 +213,13 @@ int headword_cnt = 0;                  /* for moving through the array of headwo
                     dictionary files, direct mappings for irregular variants, etc.)
 */
 
-void read_dict_info() 
+public:
+
+static void read_dict_info(void)
 {
-
-   FILE *dict_file;                      /* main list of words in dictionary */
-   FILE *e_exception_file;               /* exceptions to "e" ending (suited/suit, suites/suite) */
-   FILE *dict_supplement_file;           /* words not found in the basic dictionary list */
-   FILE *proper_noun_file;               /* so we don't have Paris->Pari or Inverness->Inver */
-   FILE *country_nationality_file;       /* Italian->Italy, French->France, etc. */
-   FILE *direct_conflation_file;         /* variants that can be directly conflated */
-
-
-   char *stemdir;                         /* the directory where all these files reside */
-   char currentfile[MAX_FILENAME_LENGTH]; /* the current lexicon file */
- 
-   char *variant;
-   char *root;
-   
-   dict_ht = create_hash(HASH_DICT_SIZE);
-
+	if (dict_initialized_flag) return;
+	
+	dict_ht = create_hash(HASH_DICT_SIZE);
 
    /* the hash table package allows a pointer to be associated with each word stored in
       the hash table.  The pointer is pointing to a structure  with two fields, one that 
@@ -156,91 +229,19 @@ void read_dict_info()
       nationalites and countries (`Italian'->`Italy')), and for caching the results
       of stemming. */
 
-    
-   /* get the directory name from an environment variable, and then build
-      the name of the file (including the path) in the variable "currentfile" */
-
-   stemdir = getenv("STEM_DIR");
-   if (!stemdir)  {
-      fprintf(stderr, "Error!  The environment variable STEM_DIR is not defined.\n
-It must be set to the directory that contains files used by the stemmer.\n");
-      exit(0);
-      }   
-   if (strlen(stemdir) > 100) {
-      fprintf(stderr, "Error!  The directory path in the environment variable STEM_DIR is 
-                      too long. \nThe limit is 100 characters.\n");
-      exit(0);
-      }
-
-
-   /*  read in a list of words from the general dictionary and store it 
+   /*  read in a list of words from the general dictionary and store it
        in the table */
 
-   strcpy((char *)&currentfile[0], (char *)&stemdir[0]);
-   strcat((char *)&currentfile[0], "/head_word_list.txt");
-   dict_file = fopen(currentfile, "r");
-   if (!dict_file)  {
-      fprintf(stderr, "Error!  Couldn't open dictionary headword file.\n");
-      exit(0);
-      }
-
-   headword_cnt++;
-   root= headword[headword_cnt];
-   fscanf(dict_file, "%s", root);
-   while (!feof(dict_file))  {
-      lookup_value = search_hash(dict_ht, root);
-      /* if the word isn't already there, insert it */
-      if (lookup_value != NULL) { 
-           fprintf(stderr, "Error!  %s (from the general dictionary file) appears to have 
-                   a duplicate entry.\n", root);
-            exit(0);}
-      dep = (dictentry *)malloc(sizeof(dictentry));
-      dep->e_exception = FALSE;
-      dep->root = "";
-      insert_hash(dict_ht, root, (void *)dep);
-      headword_cnt++;
-      root= headword[headword_cnt];
-      fscanf(dict_file, "%s", root);
-      }
-
-
-   fclose(dict_file);
-
+	hash_single(kstem::head_word_list, kstem::head_word_list_size,
+	"Error!  %s (from the general dictionary file) appears to have a duplicate entry.\n");
 
    /* now store words that are not found in the main dictionary.  I make
       a distinction between a "main" dictionary and a supplemental one
       because this makes it easier to maintain the dictionary and to 
       trace down differences in performance. */
 
-   strcpy((char *)&currentfile[0], (char *)&stemdir[0]);
-   strcat((char *)&currentfile[0], "/dict_supplement.txt");
-   dict_supplement_file = fopen(currentfile, "r");
-   if (!dict_supplement_file)  {
-       fprintf(stderr, "Error!  Couldn't open file of supplemental words to the dictionary.\n");
-       exit(0);
-       }
-
-   headword_cnt++;
-   root= headword[headword_cnt];
-   fscanf(dict_supplement_file, "%s", root);
-   while (!feof(dict_supplement_file))  {
-      lookup_value = search_hash(dict_ht, root);
-      if (lookup_value != NULL) {
-         fprintf(stderr, "Error!  Word %s (from the supplemental dictionary) appears to have 
-                         a duplicate entry.\n", root);
-         exit(0);
-         }
-      dep = (dictentry *)malloc(sizeof(dictentry));
-      dep->e_exception = FALSE;
-      dep->root = "";
-      insert_hash(dict_ht, root, (void *)dep);
-      headword_cnt++;
-      root= headword[headword_cnt];
-      fscanf(dict_supplement_file, "%s", root);
-      }
-
-   fclose(dict_supplement_file);
-
+	hash_single(kstem::dict_supplement, kstem::dict_supplement_size,
+	"Error!  Word %s (from the supplemental dictionary) appears to have a duplicate entry.\n");
 
    /* read in a list of words that are exceptions to the stemming rule I use 
       (i.e., if a word can end with an `e', it does).  So, `automating' -> `automate' 
@@ -249,163 +250,41 @@ It must be set to the directory that contains files used by the stemmer.\n");
       in the letter "e".
     */
 
-   strcpy((char *)&currentfile[0], (char *)&stemdir[0]);
-   strcat((char *)&currentfile[0], "/e_exception_words.txt");
-   e_exception_file = fopen(currentfile,  "r");
-   if (!e_exception_file)  {
-       fprintf(stderr, "Error!  Couldn't open file of words that are exceptions with 'e' ending.\n");
-       exit(0);
-       }
-
-   headword_cnt++;
-   root= headword[headword_cnt];
-   fscanf(e_exception_file, "%s", root);
-   while (!feof(e_exception_file))  {
-       lookup_value = search_hash(dict_ht, root);
-       if (lookup_value == NULL)  {
-           fprintf(stderr, "Error!  %s (from the 'e' ending exception file) was not
-                   found in the main or supplemental dictioanry.\n", root);
-           exit(0);
-           }
-       dep = (dictentry *)malloc(sizeof(dictentry));
-       dep->e_exception = TRUE;
-       dep->root = "";
-       insert_hash(dict_ht, headword[headword_cnt], (void *)dep);        
-       headword_cnt++;
-       root= headword[headword_cnt];       
-       fscanf(e_exception_file, "%s", root);
-       }
-
-   fclose(e_exception_file);
-
-
+	hash_exceptions(kstem::e_exception_words, kstem::e_exception_words_size,
+	"Error!  %s (from the 'e' ending exception file) was not found in the main or supplemental dictioanry.\n");
 
    /*  store words for which we have a direct conflation.  These are cases that
        would not go through due to length restrictions (`owing'->`owe'), or in which
        the user wishes to over-ride the normal operation of the stemmer */
 
-   strcpy((char *)&currentfile[0], (char *)&stemdir[0]);
-   strcat((char *)&currentfile[0], "/direct_conflations.txt");
-   direct_conflation_file = fopen(currentfile, "r");
-   if (!direct_conflation_file)  {
-      fprintf(stderr, "Error!  Couldn't open file of conflation words for the dictionary.\n");
-      exit(0);
-      }
-     
-   headword_cnt++;
-   variant = headword[headword_cnt];
-   headword_cnt++;
-   root = headword[headword_cnt];
-   fscanf(direct_conflation_file, "%s %s", variant, root);
-   while (!feof(direct_conflation_file))  {
-       lookup_value = search_hash(dict_ht, variant);
-       if (lookup_value != NULL)  {
-           fprintf(stderr, "Error!  %s (from the direct conflation file) appears to have 
-                   a duplicate entry.\n", variant);
-           exit(0);
-           }         
-       dep = (dictentry *)malloc(sizeof(dictentry));
-       dep->e_exception = FALSE;
-       dep->root = root;
-       insert_hash(dict_ht, variant, (void *)dep);
-       headword_cnt++;
-       variant = headword[headword_cnt];
-       headword_cnt++;
-       root = headword[headword_cnt];
-       fscanf(direct_conflation_file, "%s %s", variant, root);
-       }
-
-   fclose(direct_conflation_file);
-
-
-
+	hash_double(kstem::direct_conflations, kstem::direct_conflations_size,
+	"Error!  %s (from the direct conflation file) appears to have a duplicate entry.\n");
 
    /* store the mappings between countries and nationalities (e.g., British/Britain), 
       and morphology associated with continents (european/europe).  */
-
-   strcpy((char *)&currentfile[0], (char *)&stemdir[0]);
-   strcat((char *)&currentfile[0], "/country_nationality.txt");
-   country_nationality_file = fopen(currentfile, "r");
-   if (!country_nationality_file)  {
-      fprintf(stderr, "Error!  Couldn't open file of variants associated with the names 
-             of countries.\n");
-      exit(0);
-      }
-
 
    /* Just as with the previous direct-conflation file, we want to create a direct
       mapping from a variant to a root form.  In this case the mapping is between
       country nationalities and the country name (e.g., British->Britain).  They 
       are kept in separate files for ease of maintenance */
-        
-   headword_cnt++;
-   variant = headword[headword_cnt];
-   headword_cnt++;
-   root = headword[headword_cnt];
-   fscanf(country_nationality_file, "%s %s", variant, root);
-   while (!feof(country_nationality_file))  {
-      lookup_value = search_hash(dict_ht, variant);
-      if (lookup_value != NULL) {
-         fprintf(stderr, "Error!  Word %s (from the country/nationality file) appears
-                         to have a duplicate entry.\n", variant);
-         exit(0);}
-      dep = (dictentry *)malloc(sizeof(dictentry));
-      dep->e_exception = FALSE;
-      dep->root = root;
-      insert_hash(dict_ht, variant, (void *)dep);
-      headword_cnt++;
-      variant = headword[headword_cnt];
-      headword_cnt++;
-      root = headword[headword_cnt];
-      fscanf(country_nationality_file, "%s %s", variant, root);
-      }
 
-   fclose(country_nationality_file);
-
-
+	hash_double(kstem::country_nationality, kstem::country_nationality_size,
+	"Error!  Word %s (from the country/nationality file) appears to have a duplicate entry.\n");
 
    /* finally, store proper nouns that would otherwise be altered by
       the stemmer (e.g. `Inverness') */
 
+	hash_single(kstem::proper_nouns, kstem::proper_nouns_size,
+	"Error!  %s (from the proper noun file) appears to have a duplicate entry\n");
 
-   strcpy((char *)&currentfile[0], (char *)&stemdir[0]);
-   strcat((char *)&currentfile[0], "/proper_nouns.txt");
-   proper_noun_file = fopen(currentfile, "r");
-   if (!proper_noun_file)  {
-      fprintf(stderr, "Error!  Couldn't open file of proper nouns.\n");
-      exit(0);
-      }
-
-   headword_cnt++;
-   root = headword[headword_cnt];
-   fscanf(proper_noun_file, "%s", root);
-   while (!feof(proper_noun_file))  {
-      lookup_value = search_hash(dict_ht, root);
-      if (lookup_value != NULL) {
-         fprintf(stderr, "Error!  %s (from the proper noun file) appears to have 
-                   a duplicate entry\n", root);
-           exit(0);}
-      dep = (dictentry *)malloc(sizeof(dictentry));
-      dep->e_exception = FALSE;
-      dep->root = "";
-      insert_hash(dict_ht, root, (void *)dep);
-      headword_cnt++;
-      root = headword[headword_cnt];
-      fscanf(proper_noun_file, "%s", root);
-      }
-
-   fclose(proper_noun_file);
-
-
-   dict_initialized_flag = TRUE;
+	dict_initialized_flag = TRUE;
 }
 
-
-
+private:
 
 /* consonant() returns TRUE if word[i] is a consonant.  (The recursion is safe.) */
 
-static boolean consonant(int i)
+boolean consonant(int i)
 {
     char ch;
 
@@ -424,7 +303,7 @@ static boolean consonant(int i)
 
 /* This routine is useful for ensuring that we don't stem acronyms */
 
-static boolean vowelinstem()
+boolean vowelinstem()
 {
     int i;
 
@@ -438,7 +317,7 @@ static boolean vowelinstem()
 
 /* return TRUE if word ends with a double consonant */
 
-static boolean doublec (int i)
+boolean doublec (int i)
 {
     if (i < 1)
 	return(FALSE);
@@ -459,7 +338,7 @@ static boolean doublec (int i)
    to ends_in (as it was in the original version of this code).
 */
 
-static boolean ends(char *str, int sufflength)
+boolean ends(const char *str, int sufflength)
 {
     int r = wordlength - sufflength;    /* length of word before this suffix */
     boolean match;
@@ -467,7 +346,7 @@ static boolean ends(char *str, int sufflength)
     if (sufflength > k)
 	return(FALSE);
     
-    match = (strcmp((char *)word+r, (char *)str) == 0);
+    match = (strcmp(word+r, str) == 0);
     j = (match ? r-1 : k);             /* use r-1 since j is an index rather than length */
     return(match);
 }
@@ -477,9 +356,9 @@ static boolean ends(char *str, int sufflength)
 
 /* replace old suffix with str */
 
-static void setsuff(char *str, int length)
+void setsuff(const char *str, int length)
 {
-    strcpy((char *)word+j+1, (char *)str);
+    strcpy(word+j+1, str);
     k = j + length;
     word[k+1] = '\0';
 }
@@ -488,17 +367,17 @@ static void setsuff(char *str, int length)
 
 /* convert plurals to singular form, and `-ies' to `y' */
 
-static void plural ()
+void plural ()
 {
 
-   if (search_hash(dict_ht, word) != NULL)
+   if (search_hash(word) != NULL)
       return;
   
    if (final_c == 's')  {
       if (ends_in("ies")) {
          word[j+3] = '\0';
          k--;
-         if (search_hash(dict_ht, word) != NULL)        /* ensure calories -> calorie */
+         if (search_hash(word) != NULL)        /* ensure calories -> calorie */
             return;
          k++;
          word[j+3] = 's';             
@@ -516,14 +395,14 @@ static void plural ()
               noun (a type of racket used in lacrosse), but the verb is much more
               common */
 
-           if ((search_hash(dict_ht, word) != NULL)  && !((word[j] == 's') && (word[j-1] == 's')))
+           if ((search_hash(word) != NULL)  && !((word[j] == 's') && (word[j-1] == 's')))
               return;
 
            /* try removing the "es" */
 
            word[j+1] = '\0';
            k--;
-           if (search_hash(dict_ht, word) != NULL)
+           if (search_hash(word) != NULL)
               return;
 
            /* the default is to retain the "e" */
@@ -545,10 +424,10 @@ static void plural ()
 
 /* convert past tense (-ed) to present, and `-ied' to `y' */
 
-static void past_tense ()
+void past_tense ()
 {
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
      return;
 
   /* Handle words less than 5 letters with a direct mapping  
@@ -560,7 +439,7 @@ static void past_tense ()
   if (ends_in("ied"))  {
      word[j+3] = '\0';
      k--;
-     if (search_hash(dict_ht, word) != NULL) /* we almost always want to convert -ied to -y, but */
+     if (search_hash(word) != NULL) /* we almost always want to convert -ied to -y, but */
         return;                            /* this isn't true for short words (died->die)      */
      k++;                                  /* I don't know any long words that this applies to, */
      word[j+3] = 'd';                      /* but just in case...                              */
@@ -574,16 +453,14 @@ static void past_tense ()
       word[j+2] = '\0'; 
       k = j + 1;              
 
-      lookup_value = search_hash(dict_ht, word);
-      if (lookup_value != NULL)
-         dep = (dictentry *)lookup_value;
-      if ((lookup_value != NULL) && !(dep->e_exception))    /* if it's in the dictionary and not an exception */
+      dictentry *dep = search_hash(word);
+      if ((dep != NULL) && !(dep->e_exception))    /* if it's in the dictionary and not an exception */
          return;
 
       /* try removing the "ed" */
       word[j+1] = '\0';
       k = j;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
 
 
@@ -595,7 +472,7 @@ static void past_tense ()
       if (doublec(k))  {
          word[k] = '\0';
          k--;
-         if (search_hash(dict_ht, word) != NULL)
+         if (search_hash(word) != NULL)
              return;
          word[k+1] = word[k];
          k++;
@@ -632,10 +509,10 @@ static void past_tense ()
 
 /* handle `-ing' endings */
 
-static void aspect ()
+void aspect ()
 {
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
      return;
 
   /* handle short words (aging -> age) via a direct mapping.  This
@@ -654,26 +531,24 @@ static void aspect ()
      word[j+2] = '\0';
      k = j+1;          
 
-     lookup_value = search_hash(dict_ht, word);
-     if (lookup_value != NULL)
-     dep = (dictentry *)lookup_value;
+     dictentry *dep = search_hash(word);
 
      /* if it's in the dictionary and not an exception */
-     if ((lookup_value != NULL) && !(dep->e_exception)) 
+     if ((dep != NULL) && !(dep->e_exception))
         return;
 
      /* adding on the `e' didn't work, so remove it */
      word[k] = '\0';
      k--;                                      /* note that `ing' has also been removed */
 
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
 
      /* if I can remove a doubled consonant and get a word, then do so */
      if (doublec(k))  {
         k--;
         word[k+1] = '\0';
-        if (search_hash(dict_ht, word) != NULL)
+        if (search_hash(word) != NULL)
            return;
         word[k+1] = word[k];       /* restore the doubled consonant */
 
@@ -716,11 +591,11 @@ static void aspect ()
 /* this routine deals with -ion, -ition, -ation, -ization, and -ication.  The 
    -ization ending is always converted to -ize */
 
-static void ion_endings ()
+void ion_endings ()
 {
   int old_k = k;
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
      return;
 
   if (ends_in("ization"))  {   /* the -ize ending is very productive, so simply accept it as the root */
@@ -737,7 +612,7 @@ static void ion_endings ()
      k = j+1;
 
      /* remove -ition and add `e', and check against the dictionary */
-     if (search_hash(dict_ht, word) != NULL)     
+     if (search_hash(word) != NULL)
         return;                    /* (e.g., definition->define, opposition->oppose) */
 
      /* restore original values */
@@ -753,19 +628,19 @@ static void ion_endings ()
      k = j+3;         
      
     /* remove -ion and add `e', and check against the dictionary */
-     if (search_hash(dict_ht, word) != NULL)   
+     if (search_hash(word) != NULL)
         return;                  /* (elmination -> eliminate)  */
 
 
      word[j+1] = 'e';            /* remove -ation and add `e', and check against the dictionary */
      word[j+2] = '\0';           /* (allegation -> allege) */
      k = j+1;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
 
      word[j+1] = '\0';           /* just remove -ation (resignation->resign) and check dictionary */
      k = j;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
      
      /* restore original values */
@@ -786,7 +661,7 @@ static void ion_endings ()
      k = j+1;
      
      /* remove -ication and add `y', and check against the dictionary */
-     if (search_hash(dict_ht, word) != NULL)  
+     if (search_hash(word) != NULL)
         return;                 /* (e.g., amplification -> amplify) */
 
      /* restore original values */
@@ -802,14 +677,14 @@ static void ion_endings ()
      k = j+1;
 
      /* remove -ion and add `e', and check against the dictionary */
-     if (search_hash(dict_ht, word) != NULL)    
+     if (search_hash(word) != NULL)
         return;
 
      word[j+1] = '\0';
      k = j;
 
      /* remove -ion, and if it's found, treat that as the root */
-     if (search_hash(dict_ht, word) != NULL)    
+     if (search_hash(word) != NULL)
         return;
 
      /* restore original values */
@@ -827,13 +702,13 @@ static void ion_endings ()
 /* this routine deals with -er, -or, -ier, and -eer.  The -izer ending is always converted to
    -ize */
 
-static void er_and_or_endings ()
+void er_and_or_endings ()
 {
   int old_k = k;
 
   char word_char;                 /* so we can remember if it was -er or -or */
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
     return;
 
   if (ends_in("izer")) {          /* -ize is very productive, so accept it as the root */
@@ -847,7 +722,7 @@ static void er_and_or_endings ()
      if (doublec(j)) {
         word[j] = '\0';
         k = j - 1;
-        if (search_hash(dict_ht, word) != NULL)
+        if (search_hash(word) != NULL)
            return;
         word[j] = word[j-1];       /* restore the doubled consonant */
         }
@@ -857,7 +732,7 @@ static void er_and_or_endings ()
         word[j] = 'y';
         word[j+1] = '\0';
         k = j;
-        if (search_hash(dict_ht, word) != NULL)  /* yes, so check against the dictionary */
+        if (search_hash(word) != NULL)  /* yes, so check against the dictionary */
            return;
         word[j] = 'i';             /* restore the endings */ 
         word[j+1] = 'e';
@@ -867,23 +742,23 @@ static void er_and_or_endings ()
      if (word[j] == 'e') {         /* handle -eer */
         word[j] = '\0';
         k = j - 1;
-        if (search_hash(dict_ht, word) != NULL)
+        if (search_hash(word) != NULL)
            return;
         word[j] = 'e';
         }
        
      word[j+2] = '\0';            /* remove the -r ending */
      k = j+1;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
      word[j+1] = '\0';            /* try removing -er/-or */
      k = j;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
      word[j+1] = 'e';             /* try removing -or and adding -e */
      word[j+2] = '\0';
      k = j+1;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
       
      word[j+1] = word_char;       /* restore the word to the way it was */
@@ -900,22 +775,22 @@ static void er_and_or_endings ()
    Sometimes this will temporarily leave us with a non-word (e.g., heuristically
    maps to heuristical), but then the -al is removed in the next step.  */
 
-static void ly_endings ()
+void ly_endings ()
 {
    int old_k = k;
 
-   if (search_hash(dict_ht, word) != NULL)
+   if (search_hash(word) != NULL)
       return;
 
    if (ends_in("ly")) {
       word[j+2] = 'e';             /* try converting -ly to -le */
-      if (search_hash(dict_ht, word) != NULL)       
+      if (search_hash(word) != NULL)
          return;
       word[j+2] = 'y';
 
       word[j+1] = '\0';            /* try just removing the -ly */
       k = j;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
       if ((word[j-1] == 'a') && (word[j] == 'l'))    /* always convert -ally to -al */
          return;
@@ -932,7 +807,7 @@ static void ly_endings ()
          word[j] = 'y';
          word[j+1] = '\0';
          k = j;
-         if (search_hash(dict_ht, word) != NULL)
+         if (search_hash(word) != NULL)
             return;
          word[j] = 'i';
          word[j+1] = 'l';
@@ -950,23 +825,23 @@ static void ly_endings ()
 /* this routine deals with -al endings.  Some of the endings from the previous routine
    are finished up here.  */
 
-static void al_endings() 
+void al_endings()
 {
    int old_k = k;
 
-   if (search_hash(dict_ht, word) != NULL)
+   if (search_hash(word) != NULL)
       return;
 
    if (ends_in("al"))  {
       word[j+1] = '\0';
       k = j;
-      if (search_hash(dict_ht, word) != NULL)     /* try just removing the -al */
+      if (search_hash(word) != NULL)     /* try just removing the -al */
          return;
 
       if (doublec(j))  {            /* allow for a doubled consonant */
         word[j] = '\0';
         k = j-1;
-        if (search_hash(dict_ht, word) != NULL)
+        if (search_hash(word) != NULL)
            return;
         word[j] = word[j-1];
         }
@@ -974,13 +849,13 @@ static void al_endings()
       word[j+1] = 'e';              /* try removing the -al and adding -e */
       word[j+2] = '\0';
       k = j+1;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
 
       word[j+1] = 'u';              /* try converting -al to -um */
       word[j+2] = 'm';              /* (e.g., optimal - > optimum ) */
       k = j+2;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
 
       word[j+1] = 'a';              /* restore the ending to the way it was */
@@ -991,13 +866,13 @@ static void al_endings()
       if ((word[j-1] == 'i') && (word[j] == 'c'))  {
          word[j-1] = '\0';          /* try removing -ical  */
          k = j-2;
-         if (search_hash(dict_ht, word) != NULL)
+         if (search_hash(word) != NULL)
             return;
 
          word[j-1] = 'y';           /* try turning -ical to -y (e.g., bibliographical) */
          word[j] = '\0';
          k = j-1;
-         if (search_hash(dict_ht, word) != NULL)
+         if (search_hash(word) != NULL)
             return;
 
          word[j-1] = 'i';
@@ -1010,7 +885,7 @@ static void al_endings()
       if (word[j] == 'i') {        /* sometimes -ial endings should be removed */
          word[j] = '\0';           /* (sometimes it gets turned into -y, but we */
          k = j-1;                  /* aren't dealing with that case for now) */
-         if (search_hash(dict_ht, word) != NULL)
+         if (search_hash(word) != NULL)
             return;
          word[j] = 'i';
          k = old_k;
@@ -1026,23 +901,23 @@ static void al_endings()
 /* this routine deals with -ive endings.  It normalizes some of the
    -ative endings directly, and also maps some -ive endings to -ion. */
 
-static void ive_endings() 
+void ive_endings()
 {
    int old_k = k;
 
-   if (search_hash(dict_ht, word) != NULL)
+   if (search_hash(word) != NULL)
       return;
 
    if (ends_in("ive"))  {
       word[j+1] = '\0';          /* try removing -ive entirely */
       k = j;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
 
       word[j+1] = 'e';           /* try removing -ive and adding -e */
       word[j+2] = '\0';
       k = j+1;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
       word[j+1] = 'i';
       word[j+2] = 'v';
@@ -1051,10 +926,10 @@ static void ive_endings()
          word[j-1] = 'e';       /* try removing -ative and adding -e */
          word[j] = '\0';        /* (e.g., determinative -> determine) */
          k = j-1;
-         if (search_hash(dict_ht, word) != NULL)
+         if (search_hash(word) != NULL)
             return;
          word[j-1] = '\0';     /* try just removing -ative */
-         if (search_hash(dict_ht, word) != NULL)
+         if (search_hash(word) != NULL)
             return;
          word[j-1] = 'a';
          word[j] = 't';
@@ -1064,7 +939,7 @@ static void ive_endings()
        /* try mapping -ive to -ion (e.g., injunctive/injunction) */
        word[j+2] = 'o';
        word[j+3] = 'n';
-       if (search_hash(dict_ht, word) != NULL)
+       if (search_hash(word) != NULL)
           return;
 
        word[j+2] = 'v';       /* restore the original values */
@@ -1077,24 +952,24 @@ static void ive_endings()
 
 /* this routine deals with -ize endings. */
 
-static void ize_endings() 
+void ize_endings()
 {
   int old_k = k;
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
      return;
 
    if (ends_in("ize"))  {
       word[j+1] = '\0';       /* try removing -ize entirely */
       k = j;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
       word[j+1] = 'i';
 
       if (doublec(j))  {      /* allow for a doubled consonant */
          word[j] = '\0';
          k = j-1;
-        if (search_hash(dict_ht, word) != NULL)
+        if (search_hash(word) != NULL)
            return;
         word[j] = word[j-1];
         }
@@ -1102,7 +977,7 @@ static void ize_endings()
       word[j+1] = 'e';        /* try removing -ize and adding -e */
       word[j+2] = '\0';
       k = j+1;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
       word[j+1] = 'i';
       word[j+2] = 'z';
@@ -1115,17 +990,17 @@ static void ize_endings()
 
 /* this routine deals with -ment endings. */
 
-static void ment_endings() 
+void ment_endings()
 {
   int old_k = k;
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
       return;
 
   if (ends_in("ment"))  {
      word[j+1] = '\0';
      k = j;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
      word[j+1] = 'm';
      k = old_k;
@@ -1141,22 +1016,22 @@ static void ment_endings()
    productive.  The first two are mapped to -ble, and the -ity is remove
    for the latter */
 
-static void ity_endings() 
+void ity_endings()
 {
   int old_k = k;
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
       return;
 
   if (ends_in("ity"))  {
      word[j+1] = '\0';             /* try just removing -ity */
      k = j;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
      word[j+1] = 'e';              /* try removing -ity and adding -e */
      word[j+2] = '\0';
      k = j+1;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
      word[j+1] = 'i';
      word[j+2] = 't';
@@ -1193,7 +1068,7 @@ static void ity_endings()
        the root form are in the dictionary, then remove the ending
        as a default */
 
-    if (search_hash(dict_ht, word) != NULL)   
+    if (search_hash(word) != NULL)
        return;
 
     /* the default is to remove -ity altogether */
@@ -1208,12 +1083,12 @@ static void ity_endings()
 
 /* handle -able and -ible */
 
-static void ble_endings() 
+void ble_endings()
 {
   int old_k = k;
   char word_char;
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
      return;
 
   if (ends_in("ble"))  {
@@ -1223,12 +1098,12 @@ static void ble_endings()
      word_char = word[j];
      word[j] = '\0';             /* try just removing the ending */
      k = j-1;
-     if (search_hash(dict_ht, word) != NULL) 
+     if (search_hash(word) != NULL)
         return;
      if (doublec(k))  {          /* allow for a doubled consonant */
         word[k] = '\0';
         k--;
-        if (search_hash(dict_ht, word) != NULL)
+        if (search_hash(word) != NULL)
            return;
         k++;
         word[k] = word[k-1];
@@ -1236,7 +1111,7 @@ static void ble_endings()
      word[j] = 'e';              /* try removing -a/ible and adding -e */
      word[j+1] = '\0';
      k = j;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
 
      word[j] = 'a';              /* try removing -able and adding -ate */
@@ -1244,7 +1119,7 @@ static void ble_endings()
      word[j+2] = 'e';
      word[j+3] = '\0';
      k = j+2;
-     if (search_hash(dict_ht, word) != NULL)
+     if (search_hash(word) != NULL)
         return;
 
      word[j] = word_char;        /* restore the original values */
@@ -1260,10 +1135,10 @@ static void ble_endings()
 
 /* handle -ness */
 
-static void ness_endings() 
+void ness_endings()
 {
 
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
      return;
 
    if (ends_in("ness"))  {     /* this is a very productive endings, so just accept it */
@@ -1279,10 +1154,10 @@ static void ness_endings()
 
 /* handle -ism */
 
-static void ism_endings()
+void ism_endings()
 {
 
-   if (search_hash(dict_ht, word) != NULL)
+   if (search_hash(word) != NULL)
       return;
 
    if (ends_in("ism"))  {    /* this is a very productive ending, so just accept it */
@@ -1298,10 +1173,10 @@ static void ism_endings()
    also the only place we try *expanding* an ending, -ic -> -ical.
    This is to handle cases like `canonic' -> `canonical' */
 
-static void ic_endings()
+void ic_endings()
 {
 
-    if (search_hash(dict_ht, word) != NULL)
+    if (search_hash(word) != NULL)
        return;
 
     if (ends_in("ic")) {
@@ -1309,22 +1184,22 @@ static void ic_endings()
        word[j+4] = 'l';
        word[j+5] = '\0';
        k = j+4;
-       if (search_hash(dict_ht, word) != NULL)
+       if (search_hash(word) != NULL)
           return;
 
        word[j+1] = 'y';        /* try converting -ic to -y */
        word[j+2] = '\0';
        k = j+1;
-       if (search_hash(dict_ht, word) != NULL)
+       if (search_hash(word) != NULL)
           return;
     
        word[j+1] = 'e';        /* try converting -ic to -e */
-       if (search_hash(dict_ht, word) != NULL)
+       if (search_hash(word) != NULL)
           return;
 
        word[j+1] = '\0';       /* try removing -ic altogether */
        k = j;
-       if (search_hash(dict_ht, word) != NULL)
+       if (search_hash(word) != NULL)
           return;
 
        word[j+1] = 'i';        /* restore the original ending */
@@ -1339,9 +1214,9 @@ static void ic_endings()
 
 /* handle -ency and -ancy */
 
-static void ncy_endings()
+void ncy_endings()
 {
-  if (search_hash(dict_ht, word) != NULL)
+  if (search_hash(word) != NULL)
       return;
 
    if (ends_in("ncy"))  {
@@ -1352,7 +1227,7 @@ static void ncy_endings()
       word[j+3] = '\0';         /* (e.g., constituency -> constituent) */
       k = j+2;
 
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
 
       word[j+2] = 'c';          /* the default is to convert it to -nce */
@@ -1366,13 +1241,13 @@ static void ncy_endings()
 
 /* handle -ence and -ance */
 
-static void nce_endings()
+void nce_endings()
 {
    int old_k = k;
 
    char word_char;
 
-   if (search_hash(dict_ht, word) != NULL)
+   if (search_hash(word) != NULL)
       return;
 
    if (ends_in("nce"))  {
@@ -1383,11 +1258,11 @@ static void nce_endings()
       word[j] = 'e';        /* try converting -e/ance to -e (adherance/adhere) */
       word[j+1] = '\0';
       k = j;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
       word[j] = '\0';       /* try removing -e/ance altogether (disappearance/disappear) */
       k = j-1;
-      if (search_hash(dict_ht, word) != NULL)
+      if (search_hash(word) != NULL)
          return;
       word[j] = word_char;  /* restore the original ending */
       word[j+1] = 'n';
@@ -1396,22 +1271,20 @@ static void nce_endings()
     return;
 }
 
-
-
+public:
 
 void stem(char *term, char *stem)
 {
     int i;
 
     if (!dict_initialized_flag) {
-      printf("Error!  Dictionary was not initialized.\n
-              A call to read_dict_info() must be made before calling the stemmer.\n");
+      printf("Error!  Dictionary was not initialized.\nA call to read_dict_info() must be made before calling the stemmer.\n");
       exit(1);
       }
 
     word = stem;
 
-    k = strlen((char *)term) - 1;
+    k = (int)strlen(term) - 1;
     for (i=0; i<=k; i++)           /* lowercase the local copy */
       word[i] = tolower(term[i]);
 
@@ -1439,14 +1312,8 @@ void stem(char *term, char *stem)
 
 
     /* try for a direct mapping  (this allows for cases like `Italian'->`Italy') */
-    lookup_value = search_hash(dict_ht, word);
-    if (lookup_value != NULL) {
-       dep = (dictentry *)lookup_value;             /* if the root is "", then the result is */
-       if (dep->root != "") {                       /* the word itself (which was simply shifted */
-          strcpy((char *)stem, (char *)dep->root);  /* to lowercase at the beginning of the  */
-          return;                                   /* routine). */
-          } 
-       }
+    if (search_hash_return_copy(word, stem))
+			return;
 
     plural();
     past_tense();
@@ -1454,14 +1321,8 @@ void stem(char *term, char *stem)
 
    
     /* try again for a direct mapping (this allows cases like `Italians'->`Italy') */
-   lookup_value = search_hash(dict_ht, word);
-    if (lookup_value != NULL)  {
-       dep = (dictentry *)lookup_value;             /* if the root is "", then the result is */
-       if (dep->root != "")  {                      /* the word itself (which was simply shifted */
-         strcpy((char *)stem, (char *)dep->root);   /* to lowercase at the beginning of the */
-         return;                                    /* routine). */
-          }
-        }
+    if (search_hash_return_copy(word, stem))
+			return;
 
     ity_endings();
     ness_endings();
@@ -1479,12 +1340,28 @@ void stem(char *term, char *stem)
     nce_endings();
     
     /* for the last time, try for a direct mapping */
-    lookup_value = search_hash(dict_ht, word);
-    if (lookup_value != NULL)  {              /* if we now have a word in the dictionary, */
-       dep = (dictentry *)lookup_value;       /* see if we can convert it to another form  */
-       if (dep->root != "")
-          strcpy((char *)stem, (char *)dep->root);
-       }
+    if (search_hash_return_copy(word, stem))
+			return;
 }
 
+};
 
+Kstem::boolean Kstem::dict_initialized_flag = FALSE;
+const char* Kstem::kstem_EMPTY_STRING	= "";
+HASH *Kstem::dict_ht = NULL;
+
+extern "C" {
+void stem(char *term, char *stem);
+void read_dict_info(void); 
+}
+
+void read_dict_info(void)
+{
+	Kstem::read_dict_info();
+}
+
+void stem(char *term, char *stem)
+{
+	Kstem stemmer;
+	stemmer.stem(term, stem);
+}

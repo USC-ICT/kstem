@@ -23,10 +23,13 @@
  * Header file for hash and list functions used in the debugger
  */
 
+#ifndef __kstem_hash_h__
+#define __kstem_hash_h__
+
 /* List */
 typedef struct list
 {
-  char *key;
+  const char *key;
   void *data;
   struct list *next;
 } LIST;
@@ -40,17 +43,30 @@ typedef struct hash
   LIST **t;
 } HASH;
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* Prototypes of list and hash functions */
 
-LIST *cons(char *key,void *data,LIST *lst);
-void *search(char *key,LIST *lst);
-LIST *delete(char *key,LIST *lst);
-LIST *delete_all(char *key,LIST *lst);
-int hash(char key[],int m);
+LIST *cons(const char *key,void *data,LIST *lst);
+void *search(const char *key,LIST *lst);
+// leuski::
+// this hash implemetation assumes that it owns the data you pass it.
+// and the data is allocated on the heap. So it can free the data when
+// it does not need it anymore. Kstem passes it things from the static
+// data storage (not heap) and never clears up the table. Lets disable the
+// code, which would cause bugs anyway...
+//LIST *delete_key(const char *key,LIST *lst);
+//LIST *delete_all(const char *key,LIST *lst);
+int hash(const char *key,int m);
 HASH *create_hash(int m);
-void insert_hash(HASH *h,char *key,void *data);
-void *search_hash(HASH *h,char *key);
-void delete_hash(HASH *h,char *key);
+void insert_hash(HASH *h,const char *key,void *data);
+void *search_hash(HASH *h,const char *key);
+//void delete_hash(HASH *h,const char *key);
 
+#ifdef __cplusplus
+}
+#endif
 
+#endif /* __kstem_hash_h__ */
