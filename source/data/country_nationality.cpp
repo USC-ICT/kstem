@@ -1,6 +1,5 @@
 //
 //  country_nationality.cpp
-//  alib
 //
 //  Created by Anton Leuski on 8/7/15.
 //  Copyright (c) 2015 Anton Leuski & ICT/USC. All rights reserved.
