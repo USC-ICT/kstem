@@ -10,19 +10,19 @@
 		620C62531B7562ED00FA2953 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 620C62461B7562ED00FA2953 /* hash.c */; };
 		620C62541B7562ED00FA2953 /* hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 620C62471B7562ED00FA2953 /* hash.h */; };
 		620C62581B7562ED00FA2953 /* public-kstem-v0.8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620C624C1B7562ED00FA2953 /* public-kstem-v0.8.cpp */; };
-		62415C2F1BB9AE7300CEE8DE /* country_nationality.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C261BB9AE7300CEE8DE /* country_nationality.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C301BB9AE7300CEE8DE /* country_nationality.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C261BB9AE7300CEE8DE /* country_nationality.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C311BB9AE7300CEE8DE /* dict_supplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C271BB9AE7300CEE8DE /* dict_supplement.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C321BB9AE7300CEE8DE /* dict_supplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C271BB9AE7300CEE8DE /* dict_supplement.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C331BB9AE7300CEE8DE /* direct_conflations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C281BB9AE7300CEE8DE /* direct_conflations.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C341BB9AE7300CEE8DE /* direct_conflations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C281BB9AE7300CEE8DE /* direct_conflations.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C351BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C291BB9AE7300CEE8DE /* e_exception_words.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C361BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C291BB9AE7300CEE8DE /* e_exception_words.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C371BB9AE7300CEE8DE /* head_word_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2A1BB9AE7300CEE8DE /* head_word_list.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C381BB9AE7300CEE8DE /* head_word_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2A1BB9AE7300CEE8DE /* head_word_list.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C391BB9AE7300CEE8DE /* kstem_data.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 62415C2B1BB9AE7300CEE8DE /* kstem_data.hpp */; settings = {ASSET_TAGS = (); }; };
-		62415C3A1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; settings = {ASSET_TAGS = (); }; };
-		62415C3B1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; settings = {ASSET_TAGS = (); }; };
+		62415C2F1BB9AE7300CEE8DE /* country_nationality.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C261BB9AE7300CEE8DE /* country_nationality.cpp */; };
+		62415C301BB9AE7300CEE8DE /* country_nationality.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C261BB9AE7300CEE8DE /* country_nationality.cpp */; };
+		62415C311BB9AE7300CEE8DE /* dict_supplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C271BB9AE7300CEE8DE /* dict_supplement.cpp */; };
+		62415C321BB9AE7300CEE8DE /* dict_supplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C271BB9AE7300CEE8DE /* dict_supplement.cpp */; };
+		62415C331BB9AE7300CEE8DE /* direct_conflations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C281BB9AE7300CEE8DE /* direct_conflations.cpp */; };
+		62415C341BB9AE7300CEE8DE /* direct_conflations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C281BB9AE7300CEE8DE /* direct_conflations.cpp */; };
+		62415C351BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C291BB9AE7300CEE8DE /* e_exception_words.cpp */; };
+		62415C361BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C291BB9AE7300CEE8DE /* e_exception_words.cpp */; };
+		62415C371BB9AE7300CEE8DE /* head_word_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2A1BB9AE7300CEE8DE /* head_word_list.cpp */; };
+		62415C381BB9AE7300CEE8DE /* head_word_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2A1BB9AE7300CEE8DE /* head_word_list.cpp */; };
+		62415C391BB9AE7300CEE8DE /* kstem_data.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 62415C2B1BB9AE7300CEE8DE /* kstem_data.hpp */; };
+		62415C3A1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; };
+		62415C3B1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -328,6 +328,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = kstem;
+				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PRODUCT_NAME)";
 			};
 			name = Debug;
 		};
@@ -337,6 +338,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = kstem;
+				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PRODUCT_NAME)";
 			};
 			name = Release;
 		};
@@ -353,6 +355,7 @@
 				PRODUCT_NAME = kstem;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SYMROOT = "$(HOME)/Documents/Build/$(PRODUCT_NAME)";
 			};
 			name = Debug;
 		};
@@ -364,6 +367,7 @@
 				PRODUCT_NAME = kstem;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SYMROOT = "$(HOME)/Documents/Build/$(PRODUCT_NAME)";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
