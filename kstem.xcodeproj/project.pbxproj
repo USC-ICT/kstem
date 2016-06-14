@@ -23,6 +23,8 @@
 		62415C391BB9AE7300CEE8DE /* kstem_data.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 62415C2B1BB9AE7300CEE8DE /* kstem_data.hpp */; };
 		62415C3A1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; };
 		62415C3B1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; };
+		62B316F81D0FC2AF00D2E4E4 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 620C62461B7562ED00FA2953 /* hash.c */; };
+		62B316F91D0FC2B300D2E4E4 /* public-kstem-v0.8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620C624C1B7562ED00FA2953 /* public-kstem-v0.8.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -233,6 +235,8 @@
 				62415C3B1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */,
 				62415C361BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */,
 				62415C381BB9AE7300CEE8DE /* head_word_list.cpp in Sources */,
+				62B316F81D0FC2AF00D2E4E4 /* hash.c in Sources */,
+				62B316F91D0FC2B300D2E4E4 /* public-kstem-v0.8.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
