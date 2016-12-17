@@ -334,6 +334,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = kstem;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -343,6 +344,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = kstem;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
