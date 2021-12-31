@@ -536,7 +536,6 @@
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = kstem;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = x86_64;
 			};
 			name = Debug;
 		};
@@ -547,7 +546,6 @@
 				EXECUTABLE_PREFIX = lib;
 				PRODUCT_NAME = kstem;
 				SKIP_INSTALL = YES;
-				VALID_ARCHS = x86_64;
 			};
 			name = Release;
 		};
