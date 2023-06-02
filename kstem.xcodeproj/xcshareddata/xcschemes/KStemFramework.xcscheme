@@ -10,13 +10,13 @@
             buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
-            buildForArchiving = "NO"
+            buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "620C625F1B75645D00FA2953"
-               BuildableName = "libkstem.a"
-               BlueprintName = "kstem.ios"
+               BlueprintIdentifier = "62D900C3228BF26A0083A9F5"
+               BuildableName = "KStem.framework"
+               BlueprintName = "KStemFramework"
                ReferencedContainer = "container:kstem.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,15 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "620C625F1B75645D00FA2953"
-            BuildableName = "libkstem.a"
-            BlueprintName = "kstem.ios"
-            ReferencedContainer = "container:kstem.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
       <Testables>
       </Testables>
    </TestAction>
@@ -52,9 +43,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "620C625F1B75645D00FA2953"
-            BuildableName = "libkstem.a"
-            BlueprintName = "kstem.ios"
+            BlueprintIdentifier = "62D900C3228BF26A0083A9F5"
+            BuildableName = "KStem.framework"
+            BlueprintName = "KStemFramework"
             ReferencedContainer = "container:kstem.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -68,9 +59,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "620C625F1B75645D00FA2953"
-            BuildableName = "libkstem.a"
-            BlueprintName = "kstem.ios"
+            BlueprintIdentifier = "62D900C3228BF26A0083A9F5"
+            BuildableName = "KStem.framework"
+            BlueprintName = "KStemFramework"
             ReferencedContainer = "container:kstem.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

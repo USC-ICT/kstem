@@ -7,46 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		620C62531B7562ED00FA2953 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 620C62461B7562ED00FA2953 /* hash.c */; };
-		620C62541B7562ED00FA2953 /* hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 620C62471B7562ED00FA2953 /* hash.h */; };
-		620C62581B7562ED00FA2953 /* public-kstem-v0.8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620C624C1B7562ED00FA2953 /* public-kstem-v0.8.cpp */; };
-		62415C2F1BB9AE7300CEE8DE /* country_nationality.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C261BB9AE7300CEE8DE /* country_nationality.cpp */; };
+		620766272A2A8DB200112A3D /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 620C62601B75645D00FA2953 /* libkstem.a */; };
 		62415C301BB9AE7300CEE8DE /* country_nationality.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C261BB9AE7300CEE8DE /* country_nationality.cpp */; };
-		62415C311BB9AE7300CEE8DE /* dict_supplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C271BB9AE7300CEE8DE /* dict_supplement.cpp */; };
 		62415C321BB9AE7300CEE8DE /* dict_supplement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C271BB9AE7300CEE8DE /* dict_supplement.cpp */; };
-		62415C331BB9AE7300CEE8DE /* direct_conflations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C281BB9AE7300CEE8DE /* direct_conflations.cpp */; };
 		62415C341BB9AE7300CEE8DE /* direct_conflations.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C281BB9AE7300CEE8DE /* direct_conflations.cpp */; };
-		62415C351BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C291BB9AE7300CEE8DE /* e_exception_words.cpp */; };
 		62415C361BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C291BB9AE7300CEE8DE /* e_exception_words.cpp */; };
-		62415C371BB9AE7300CEE8DE /* head_word_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2A1BB9AE7300CEE8DE /* head_word_list.cpp */; };
 		62415C381BB9AE7300CEE8DE /* head_word_list.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2A1BB9AE7300CEE8DE /* head_word_list.cpp */; };
-		62415C391BB9AE7300CEE8DE /* kstem_data.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 62415C2B1BB9AE7300CEE8DE /* kstem_data.hpp */; };
-		62415C3A1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; };
 		62415C3B1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */; };
 		62B316F81D0FC2AF00D2E4E4 /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = 620C62461B7562ED00FA2953 /* hash.c */; };
 		62B316F91D0FC2B300D2E4E4 /* public-kstem-v0.8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 620C624C1B7562ED00FA2953 /* public-kstem-v0.8.cpp */; };
-		62D900BB228BF1ED0083A9F5 /* KStem.h in Headers */ = {isa = PBXBuildFile; fileRef = 62D900B9228BF1ED0083A9F5 /* KStem.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		62D900CE228BF3550083A9F5 /* KStemmer.h in Headers */ = {isa = PBXBuildFile; fileRef = 62D900CC228BF3550083A9F5 /* KStemmer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		62D900D0228BF3550083A9F5 /* KStemmer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 62D900CD228BF3550083A9F5 /* KStemmer.mm */; };
-		62D900D7228BF72B0083A9F5 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 620C62601B75645D00FA2953 /* libkstem.a */; };
-		62D900D8228BF7340083A9F5 /* libkstem.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 620C62301B75623E00FA2953 /* libkstem.a */; };
 		62D900E3228BF8600083A9F5 /* KStemmer.h in Headers */ = {isa = PBXBuildFile; fileRef = 62D900CC228BF3550083A9F5 /* KStemmer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		62D900D2228BF7170083A9F5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 620C62281B75623E00FA2953 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 620C622F1B75623E00FA2953;
-			remoteInfo = kstem.osx;
-		};
-		62D900D4228BF71E0083A9F5 /* PBXContainerItemProxy */ = {
+		620766282A2A8DB200112A3D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 620C62281B75623E00FA2953 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 620C625F1B75645D00FA2953;
-			remoteInfo = kstem.ios;
+			remoteInfo = kstem;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -63,7 +42,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		620C62301B75623E00FA2953 /* libkstem.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libkstem.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		620C62461B7562ED00FA2953 /* hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
 		620C62471B7562ED00FA2953 /* hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
 		620C624A1B7562ED00FA2953 /* kstem-doc.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "kstem-doc.txt"; sourceTree = "<group>"; };
@@ -80,7 +58,6 @@
 		62415C2C1BB9AE7300CEE8DE /* proper_nouns.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = proper_nouns.cpp; sourceTree = "<group>"; };
 		62415C2D1BB9AE7300CEE8DE /* README.TXT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.TXT; sourceTree = "<group>"; };
 		62415C2E1BB9AE7300CEE8DE /* VERSION.TXT */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = VERSION.TXT; sourceTree = "<group>"; };
-		62D900B7228BF1ED0083A9F5 /* KStem.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KStem.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		62D900B9228BF1ED0083A9F5 /* KStem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KStem.h; sourceTree = "<group>"; };
 		62D900BA228BF1ED0083A9F5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		62D900C4228BF26A0083A9F5 /* KStem.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KStem.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -89,13 +66,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		620C622D1B75623E00FA2953 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		620C625D1B75645D00FA2953 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -103,19 +73,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		62D900B4228BF1ED0083A9F5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				62D900D8228BF7340083A9F5 /* libkstem.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		62D900C1228BF26A0083A9F5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				62D900D7228BF72B0083A9F5 /* libkstem.a in Frameworks */,
+				620766272A2A8DB200112A3D /* libkstem.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,9 +97,7 @@
 		620C62311B75623E00FA2953 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				620C62301B75623E00FA2953 /* libkstem.a */,
 				620C62601B75645D00FA2953 /* libkstem.a */,
-				62D900B7228BF1ED0083A9F5 /* KStem.framework */,
 				62D900C4228BF26A0083A9F5 /* KStem.framework */,
 			);
 			name = Products;
@@ -195,24 +155,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		620C622E1B75623E00FA2953 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				620C62541B7562ED00FA2953 /* hash.h in Headers */,
-				62415C391BB9AE7300CEE8DE /* kstem_data.hpp in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		62D900B2228BF1ED0083A9F5 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				62D900BB228BF1ED0083A9F5 /* KStem.h in Headers */,
-				62D900CE228BF3550083A9F5 /* KStemmer.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		62D900BF228BF26A0083A9F5 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -224,26 +166,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		620C622F1B75623E00FA2953 /* kstem.osx */ = {
+		620C625F1B75645D00FA2953 /* kstem */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 620C62341B75623E00FA2953 /* Build configuration list for PBXNativeTarget "kstem.osx" */;
-			buildPhases = (
-				620C622C1B75623E00FA2953 /* Sources */,
-				620C622D1B75623E00FA2953 /* Frameworks */,
-				620C622E1B75623E00FA2953 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = kstem.osx;
-			productName = kstem;
-			productReference = 620C62301B75623E00FA2953 /* libkstem.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		620C625F1B75645D00FA2953 /* kstem.ios */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 620C62711B75645E00FA2953 /* Build configuration list for PBXNativeTarget "kstem.ios" */;
+			buildConfigurationList = 620C62711B75645E00FA2953 /* Build configuration list for PBXNativeTarget "kstem" */;
 			buildPhases = (
 				620C625C1B75645D00FA2953 /* Sources */,
 				620C625D1B75645D00FA2953 /* Frameworks */,
@@ -253,33 +178,14 @@
 			);
 			dependencies = (
 			);
-			name = kstem.ios;
+			name = kstem;
 			productName = kstem;
 			productReference = 620C62601B75645D00FA2953 /* libkstem.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		62D900B6228BF1ED0083A9F5 /* KStemFramework.osx */ = {
+		62D900C3228BF26A0083A9F5 /* KStemFramework */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 62D900BE228BF1ED0083A9F5 /* Build configuration list for PBXNativeTarget "KStemFramework.osx" */;
-			buildPhases = (
-				62D900B2228BF1ED0083A9F5 /* Headers */,
-				62D900B3228BF1ED0083A9F5 /* Sources */,
-				62D900B4228BF1ED0083A9F5 /* Frameworks */,
-				62D900B5228BF1ED0083A9F5 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				62D900D3228BF7170083A9F5 /* PBXTargetDependency */,
-			);
-			name = KStemFramework.osx;
-			productName = KStemFramework.osx;
-			productReference = 62D900B7228BF1ED0083A9F5 /* KStem.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		62D900C3228BF26A0083A9F5 /* KStemFramework.ios */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 62D900C9228BF26A0083A9F5 /* Build configuration list for PBXNativeTarget "KStemFramework.ios" */;
+			buildConfigurationList = 62D900C9228BF26A0083A9F5 /* Build configuration list for PBXNativeTarget "KStemFramework" */;
 			buildPhases = (
 				62D900BF228BF26A0083A9F5 /* Headers */,
 				62D900C0228BF26A0083A9F5 /* Sources */,
@@ -289,9 +195,9 @@
 			buildRules = (
 			);
 			dependencies = (
-				62D900D5228BF71E0083A9F5 /* PBXTargetDependency */,
+				620766292A2A8DB200112A3D /* PBXTargetDependency */,
 			);
-			name = KStemFramework.ios;
+			name = KStemFramework;
 			productName = KStemFramework.ios;
 			productReference = 62D900C4228BF26A0083A9F5 /* KStem.framework */;
 			productType = "com.apple.product-type.framework";
@@ -306,14 +212,8 @@
 				LastUpgradeCheck = 1430;
 				ORGANIZATIONNAME = "Anton Leuski";
 				TargetAttributes = {
-					620C622F1B75623E00FA2953 = {
-						CreatedOnToolsVersion = 6.4;
-					};
 					620C625F1B75645D00FA2953 = {
 						CreatedOnToolsVersion = 6.4;
-					};
-					62D900B6228BF1ED0083A9F5 = {
-						CreatedOnToolsVersion = 10.2.1;
 					};
 					62D900C3228BF26A0083A9F5 = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -334,22 +234,13 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				620C622F1B75623E00FA2953 /* kstem.osx */,
-				620C625F1B75645D00FA2953 /* kstem.ios */,
-				62D900B6228BF1ED0083A9F5 /* KStemFramework.osx */,
-				62D900C3228BF26A0083A9F5 /* KStemFramework.ios */,
+				620C625F1B75645D00FA2953 /* kstem */,
+				62D900C3228BF26A0083A9F5 /* KStemFramework */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		62D900B5228BF1ED0083A9F5 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		62D900C2228BF26A0083A9F5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -360,21 +251,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		620C622C1B75623E00FA2953 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				620C62531B7562ED00FA2953 /* hash.c in Sources */,
-				62415C371BB9AE7300CEE8DE /* head_word_list.cpp in Sources */,
-				62415C3A1BB9AE7300CEE8DE /* proper_nouns.cpp in Sources */,
-				62415C311BB9AE7300CEE8DE /* dict_supplement.cpp in Sources */,
-				620C62581B7562ED00FA2953 /* public-kstem-v0.8.cpp in Sources */,
-				62415C2F1BB9AE7300CEE8DE /* country_nationality.cpp in Sources */,
-				62415C331BB9AE7300CEE8DE /* direct_conflations.cpp in Sources */,
-				62415C351BB9AE7300CEE8DE /* e_exception_words.cpp in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		620C625C1B75645D00FA2953 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -390,14 +266,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		62D900B3228BF1ED0083A9F5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				62D900D0228BF3550083A9F5 /* KStemmer.mm in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		62D900C0228BF26A0083A9F5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -408,15 +276,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		62D900D3228BF7170083A9F5 /* PBXTargetDependency */ = {
+		620766292A2A8DB200112A3D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 620C622F1B75623E00FA2953 /* kstem.osx */;
-			targetProxy = 62D900D2228BF7170083A9F5 /* PBXContainerItemProxy */;
-		};
-		62D900D5228BF71E0083A9F5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 620C625F1B75645D00FA2953 /* kstem.ios */;
-			targetProxy = 62D900D4228BF71E0083A9F5 /* PBXContainerItemProxy */;
+			target = 620C625F1B75645D00FA2953 /* kstem */;
+			targetProxy = 620766282A2A8DB200112A3D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -424,6 +287,7 @@
 		620863C028E52DC900417C4B /* Release-beta */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -469,18 +333,10 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
-			};
-			name = "Release-beta";
-		};
-		620863C128E52DC900417C4B /* Release-beta */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = kstem;
-				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = "Release-beta";
 		};
@@ -489,37 +345,7 @@
 			buildSettings = {
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = kstem;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = "Release-beta";
-		};
-		620863C328E52DC900417C4B /* Release-beta */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = KStemFramework/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.ict.usc.KStemFramework;
-				PRODUCT_NAME = KStem;
-				SKIP_INSTALL = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = "Release-beta";
 		};
@@ -546,10 +372,10 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.ict.usc.KStemFramework;
 				PRODUCT_NAME = KStem;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -558,6 +384,7 @@
 		620C62321B75623E00FA2953 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -610,7 +437,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 			};
 			name = Debug;
@@ -618,6 +446,7 @@
 		620C62331B75623E00FA2953 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -663,39 +492,18 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = YES;
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
-			};
-			name = Release;
-		};
-		620C62351B75623E00FA2953 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = kstem;
-				SKIP_INSTALL = YES;
-			};
-			name = Debug;
-		};
-		620C62361B75623E00FA2953 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				EXECUTABLE_PREFIX = lib;
-				PRODUCT_NAME = kstem;
-				SKIP_INSTALL = YES;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		620C62721B75645E00FA2953 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = kstem;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -705,65 +513,7 @@
 			buildSettings = {
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = kstem;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
-		62D900BC228BF1ED0083A9F5 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = KStemFramework/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.ict.usc.KStemFramework;
-				PRODUCT_NAME = KStem;
-				SKIP_INSTALL = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		62D900BD228BF1ED0083A9F5 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = KStemFramework/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.ict.usc.KStemFramework;
-				PRODUCT_NAME = KStem;
-				SKIP_INSTALL = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -790,8 +540,9 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.ict.usc.KStemFramework;
 				PRODUCT_NAME = KStem;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -821,10 +572,10 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu99 gnu++11";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.ict.usc.KStemFramework;
 				PRODUCT_NAME = KStem;
-				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -843,17 +594,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		620C62341B75623E00FA2953 /* Build configuration list for PBXNativeTarget "kstem.osx" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				620C62351B75623E00FA2953 /* Debug */,
-				620C62361B75623E00FA2953 /* Release */,
-				620863C128E52DC900417C4B /* Release-beta */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		620C62711B75645E00FA2953 /* Build configuration list for PBXNativeTarget "kstem.ios" */ = {
+		620C62711B75645E00FA2953 /* Build configuration list for PBXNativeTarget "kstem" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				620C62721B75645E00FA2953 /* Debug */,
@@ -863,17 +604,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		62D900BE228BF1ED0083A9F5 /* Build configuration list for PBXNativeTarget "KStemFramework.osx" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				62D900BC228BF1ED0083A9F5 /* Debug */,
-				62D900BD228BF1ED0083A9F5 /* Release */,
-				620863C328E52DC900417C4B /* Release-beta */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		62D900C9228BF26A0083A9F5 /* Build configuration list for PBXNativeTarget "KStemFramework.ios" */ = {
+		62D900C9228BF26A0083A9F5 /* Build configuration list for PBXNativeTarget "KStemFramework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				62D900CA228BF26A0083A9F5 /* Debug */,
