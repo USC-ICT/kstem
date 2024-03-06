@@ -209,7 +209,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1520;
+				LastUpgradeCheck = 1530;
 				ORGANIZATIONNAME = "Anton Leuski";
 				TargetAttributes = {
 					620C625F1B75645D00FA2953 = {
@@ -337,6 +337,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 				VALIDATE_PRODUCT = YES;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = "Release-beta";
 		};
@@ -438,6 +439,7 @@
 				SUPPORTED_PLATFORMS = "xrsimulator xros watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Debug;
 		};
@@ -494,6 +496,7 @@
 				SUPPORTS_MACCATALYST = YES;
 				SYMROOT = "$(HOME)/Documents/Developer/Build/$(PROJECT_NAME)";
 				VALIDATE_PRODUCT = YES;
+				XROS_DEPLOYMENT_TARGET = 1.0;
 			};
 			name = Release;
 		};
